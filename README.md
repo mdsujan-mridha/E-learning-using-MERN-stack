@@ -1,19 +1,18 @@
 
-<img src='https://github.com/Aniruddha-Gade/Study-Notion-EdTech__MERN-Stack/blob/main/frontend/src/assets/Logo/Logo-Full-Light.png' />
 
 # Project Description 📝
 StudyNotion is a fully functional ed-tech platform that enables users to create, consume, and rate educational content. <br/>
 The platform is built using the **MERN stack**, which includes ReactJS, NodeJS, MongoDB, and ExpressJS.
 
 
-<h2>Explanation Video 📺 - [ https://www.youtube.com/watch?v=UP-kqPs4dJ8 ]</h2>
+<h2>Explanation Video 📺 - [  ]</h2>
 <hr/>
 
-<h2>Live link 🌍📡 - [  https://study-notion-full-stack.vercel.app/  ]</h2>
+<h2>Live link 🌍📡 - [   ]</h2>
 <hr/>
 
 
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-Notion-EdTech__MERN-Stack/blob/main/screenshots/home1.png' />
+
 
 
 
@@ -43,7 +42,7 @@ The platform is built using the **MERN stack**, which includes ReactJS, NodeJS, 
 
 <br/>
 <br/>
-<img width='100%' src='https://github.com/Aniruddha-Gade/Study-Notion-EdTech__MERN-Stack/blob/main/screenshots/Tech%20stack%20logo/gif.gif' />
+
 
 
 ## Tech Stack 💻🔧 

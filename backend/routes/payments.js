@@ -11,7 +11,7 @@ router.post('/capturePayment/', auth, isStudent, capturePayment);
 
 // Payment success/failure/cancellation
 router.post("/ssl_success",paymentSuccess);
-router.post("/payment/fail", paymentFailure);
+router.post("/payment/fail", auth,paymentFailure);
 router.post("/payment/cancel", paymentCancel);
 
 // Verify payment

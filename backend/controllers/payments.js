@@ -84,7 +84,7 @@ exports.capturePayment = async (req, res) => {
 
         const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
         sslcz.init(paymentData).then(apiResponse => {
-
+            enrollStudents(coursesId, userId, res)
             // Redirect the user to payment gateway
             if (apiResponse.GatewayPageURL) {
                 res.status(200).json({
@@ -107,12 +107,12 @@ exports.capturePayment = async (req, res) => {
         return res.status(500).json({ success: false, message: "Could not initiate order" });
     }
     // console.log(courses);
-     enrollStudents(coursesId, userId, res)
+
 };
 
 // ================ handle success payment ================
 exports.paymentSuccess = async (req, res) => {
-
+    console.log(req.body);
     res.redirect("http://localhost:5173/payment/success")
 
 
@@ -120,6 +120,7 @@ exports.paymentSuccess = async (req, res) => {
 
 // ================ enroll Students to course after payment ================
 const enrollStudents = async (courseId, userId, res) => {
+
     try {
         const enrolledCourse = await Course.findByIdAndUpdate(
             courseId,
@@ -155,11 +156,77 @@ const enrollStudents = async (courseId, userId, res) => {
 };
 
 // Payment failure
-exports.paymentFailure = (req, res) => {
-    return res.redirect('http://localhost:5173/payment/failure');
+exports.paymentFailure = async (req, res) => {
+    console.log(req.body);
+
+    const { coursesId } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const enrolledCourse = await Course.findByIdAndUpdate(
+            coursesId,
+            { $pop: { studentsEnrolled: userId } },
+            { new: true }
+        );
+
+        if (!enrolledCourse) {
+            return res.status(404).json({ success: false, message: "Course not found" });
+        }
+
+        const enrolledStudent = await User.findByIdAndUpdate(
+            userId,
+            { $push: { courses: coursesId } },
+            { new: true }
+        );
+
+        await mailSender(
+            enrolledStudent.email,
+            `Payment is failed ${enrolledCourse.courseName}`,
+            courseEnrollmentEmail(enrolledCourse.courseName, enrolledStudent.firstName)
+        );
+        res.redirect("http://localhost:5173")
+    } catch (error) {
+        console.log("Enrollment error", error);
+        return res.status(500).json({ success: false, message: "Enrollment failed" });
+    }
+
+
+    // return res.redirect('http://localhost:5173/payment/failure');
 };
 
 // Payment cancellation
-exports.paymentCancel = (req, res) => {
-    return res.redirect('http://localhost:5173/payment/cancel');
+exports.paymentCancel = async (req, res) => {
+    const { coursesId } = req.body;
+    const userId = req.user.id;
+
+
+    try {
+        const enrolledCourse = await Course.findByIdAndUpdate(
+            coursesId,
+            { $pop: { studentsEnrolled: userId } },
+            { new: true }
+        );
+
+        if (!enrolledCourse) {
+            return res.status(404).json({ success: false, message: "Course not found" });
+        }
+
+        const enrolledStudent = await User.findByIdAndUpdate(
+            userId,
+            { $push: { courses: coursesId } },
+            { new: true }
+        );
+
+        await mailSender(
+            enrolledStudent.email,
+            `Payment is failed ${enrolledCourse.courseName}`,
+            courseEnrollmentEmail(enrolledCourse.courseName, enrolledStudent.firstName)
+        );
+        res.redirect("http://localhost:5173")
+    } catch (error) {
+        console.log("Enrollment error", error);
+        return res.status(500).json({ success: false, message: "Enrollment failed" });
+    }
+
+    // return res.redirect('http://localhost:5173/payment/cancel');
 };
