@@ -202,7 +202,7 @@ function App() {
         </Route>
 
         
-          <Route path="/payment/success" element={<PaymentSuccess />} />
+          <Route path="/payment/success/:tran_id" element={<PaymentSuccess />} />
 
         
 

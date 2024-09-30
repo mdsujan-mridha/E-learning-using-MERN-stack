@@ -10,7 +10,7 @@ const { capturePayment, paymentSuccess, paymentFailure, paymentCancel } = requir
 router.post('/capturePayment/', auth, isStudent, capturePayment);
 
 // Payment success/failure/cancellation
-router.post("/ssl_success",paymentSuccess);
+router.post("/ssl_success/:tran_id/:userId/:courseId",paymentSuccess);
 router.post("/payment/fail", auth,paymentFailure);
 router.post("/payment/cancel", paymentCancel);
 

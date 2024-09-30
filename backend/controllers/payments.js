@@ -55,7 +55,7 @@ exports.capturePayment = async (req, res) => {
             total_amount: totalAmount,
             currency: 'BDT',
             tran_id: tran_id,
-            success_url: "http://localhost:5000/api/v1/payment/ssl_success",
+            success_url: `http://localhost:5000/api/v1/payment/ssl_success/${tran_id}/${userId}/${coursesId}`,
             fail_url: 'http://localhost:5000/api/v1/payment/payment/fail',
             cancel_url: 'http://localhost:5000/api/v1/payment/cancel',
             ipn_url: 'http://localhost:5000/api/v1/payment/ipn',
@@ -84,7 +84,7 @@ exports.capturePayment = async (req, res) => {
 
         const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
         sslcz.init(paymentData).then(apiResponse => {
-            enrollStudents(coursesId, userId, res)
+            // enrollStudents(coursesId, userId, res)
             // Redirect the user to payment gateway
             if (apiResponse.GatewayPageURL) {
                 res.status(200).json({
@@ -107,15 +107,25 @@ exports.capturePayment = async (req, res) => {
         return res.status(500).json({ success: false, message: "Could not initiate order" });
     }
     // console.log(courses);
-
+    
 };
 
 // ================ handle success payment ================
 exports.paymentSuccess = async (req, res) => {
-    console.log(req.body);
-    res.redirect("http://localhost:5173/payment/success")
-
-
+    // console.log(req.params);
+    // console.log(req.body);
+    // console.log(res);
+    const{courseId,userId,tran_id} = req.params;
+    try{
+        await enrollStudents(courseId,userId,res)
+        res.redirect(`http://localhost:5173/payment/success/${tran_id}`)
+    }catch(error){
+        return res.status(400).json({
+            success:false,
+            message:"We are not receive your payment yet,Please contact us as soon as possible"
+        })
+    }
+    
 };
 
 // ================ enroll Students to course after payment ================

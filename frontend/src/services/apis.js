@@ -1,5 +1,5 @@
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
-
+const BASE_URL = "http://localhost:5000/api/v1"
+console.log(BASE_URL);
 // AUTH ENDPOINTS
 export const endpoints = {
   SENDOTP_API: BASE_URL + "/auth/sendotp",

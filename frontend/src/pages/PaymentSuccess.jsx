@@ -1,6 +1,7 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 const PaymentSuccess = () => {
-
+     console.log(useParams())
     return (
         <div className="bg-gray-100 h-screen">
             <div className="bg-white p-6  md:mx-auto">
